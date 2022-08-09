@@ -1,6 +1,7 @@
 from hashlib import algorithms_available
 import json
 from lib2to3.pgen2 import token
+import random
 import secrets
 from flask import Blueprint
 from sqlalchemy import and_, bindparam, text
@@ -47,14 +48,17 @@ def login():
     login_data = request.json
     if("email" in login_data and "password" in login_data):
         query = "select * from usertable JOIN colors on person = public_id where email = '%s'" % login_data["email"]
+        #query = "select * from usertable where email = '%s'" % login_data["email"]
         user = session.execute(query).first()
+        print(user)
+        if user is None:
+            return make_response('wrong credentials 1', 401)
+
         user_return = {}
         for item in user.keys():
             user_return[item] = user[item]
 
-        if user is None:
-            return make_response('wrong credentials 1', 401)
-
+        
         if(check_password_hash(user.password, login_data["password"])):
             token = jwt.encode({
                 'public_id': user.public_id,
@@ -75,21 +79,29 @@ def signup():
 
     name, email = login_data['name'], login_data['email']
     password = login_data['password']
-    user = session.query(User)\
-        .filter_by(email=email)\
-        .first()
-    if not user:
+    try:
+        p_id= str(uuid.uuid4()),
         # database ORM object
         user = User(
-            public_id=str(uuid.uuid4()),
+            public_id=p_id,
             name=name,
             email=email,
             password=generate_password_hash(password)
-        )
+            ) 
         # insert user
         session.add(user)
         session.commit()
+        
+        r = lambda: random.randint(0,255)
+        randomC = ('#%02X%02X%02X' % (r(),r(),r()))
+        new_color = Colors(favorite_color="#ffffff",\
+            hated_color= "#ffffff",\
+            random_color = randomC,\
+            lucky_color = "#ffffff",\
+            person = p_id)
+        session.add(new_color)
+        session.commit()
         return make_response("user created successfully", 201)
-    else:
+    except:
         # returns 202 if user already exists
         return make_response('User already exists. Please Log in.', 202)

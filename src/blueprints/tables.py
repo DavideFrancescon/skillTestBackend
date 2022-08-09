@@ -71,19 +71,14 @@ def get_all_user_colors(current_user):
 @table_blueprint.route('/color', methods=["POST"])
 @token_required
 def set_color(current_user):
-    print(current_user.public_id)
     data = request.json
     if not "favorite_color" or "hated color" in data:
         return make_response("missing data", status=400)
-    r = lambda: random.randint(0,255)
-    randomC = ('#%02X%02X%02X' % (r(),r(),r()))
-    
     luckyC = mixColors(data["favorite_color"],data["hated_color"])
-    new_color = Colors(favorite_color=data["favorite_color"], \
-        hated_color= data["hated_color"] ,\
-        random_color = randomC,\
-        lucky_color = luckyC,\
-        person = current_user.public_id,)
-    session.add(new_color)
+    query = session.query(Colors).where(
+        Colors.person == current_user.public_id).first()
+    setattr(query, "favorite_color",data["favorite_color"])
+    setattr(query, "hated_color", data["hated_color"])
+    setattr(query, "lucky_color", luckyC)
     session.commit()
     return make_response("done",200)
