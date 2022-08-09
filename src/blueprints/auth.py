@@ -14,7 +14,7 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 
-from database.models.Color import Colors
+from src.database.models.Color import Colors
 
 auth_blueprint = Blueprint("auth", __name__)
 SECRET_KEY = "testprova2"
