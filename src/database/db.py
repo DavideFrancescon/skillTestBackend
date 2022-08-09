@@ -9,7 +9,7 @@ from flask_cors import CORS
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base  
-from blueprints import auth
+from src.blueprints import auth
 from dotenv import load_dotenv
 
 load_dotenv()

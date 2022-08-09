@@ -3,8 +3,8 @@ import json
 from lib2to3.pgen2 import token
 import secrets
 from flask import Blueprint
-from database.models import User, Colors, mixColors
-from database import session
+from src.database.models import User, Colors, mixColors
+from src.database import session
 from flask import Flask, request, jsonify, make_response
 from .auth import token_required
 from datetime import datetime, timedelta

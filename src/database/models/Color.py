@@ -3,9 +3,9 @@ from sqlalchemy.orm import relationship
 
 from sqlalchemy.ext.declarative import declarative_base
 
-from database.models.User import User
+from src.database.models.User import User
 
-from database import base
+from src.database import base
 
 import datetime
 import math

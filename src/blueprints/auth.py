@@ -4,8 +4,8 @@ from lib2to3.pgen2 import token
 import secrets
 from flask import Blueprint
 from sqlalchemy import and_, bindparam, text
-from database.models import User
-from database import session
+from src.database.models import User
+from src.database import session
 from flask import Flask, request, jsonify, make_response
 import uuid  # for public id
 from werkzeug.security import generate_password_hash, check_password_hash

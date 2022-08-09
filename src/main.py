@@ -3,13 +3,11 @@
 from flask import Flask
 from flask_cors import CORS
 
+from src.blueprints import( auth_blueprint, table_blueprint, users_blueprint)
+from src.database import  base, session, db
 
 app = Flask(__name__)
 SECRET_KEY = 'your secret key'
-from blueprints import( auth_blueprint, table_blueprint, users_blueprint)
-from database import base
-from database import session
-from database import db
 base.metadata.create_all(db)
 session.commit()
 app.register_blueprint(auth_blueprint, url_prefix="/auth")
