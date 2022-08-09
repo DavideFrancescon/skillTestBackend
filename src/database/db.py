@@ -15,8 +15,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
-sql_string = os.environ.get("sql_string")
-
+#sql_string = os.environ.get("sql_string")
+sql_string = "postgres://jfkvizzofidnbc:a031b17174e6d6c49e6420c68d184ce4fee9f4031fdddf70ebdb8fc6fe7b2e2a@ec2-50-19-255-190.compute-1.amazonaws.com:5432/ddda7ph7cnuaps"
 
 db = create_engine(sql_string)
 base = declarative_base()
