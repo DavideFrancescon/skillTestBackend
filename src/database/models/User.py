@@ -1,5 +1,4 @@
 
-from msilib.schema import PublishComponent
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, create_engine
 
 from sqlalchemy.ext.declarative import declarative_base
