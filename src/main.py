@@ -6,7 +6,6 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 SECRET_KEY = 'your secret key'
-
 from blueprints import( auth_blueprint, table_blueprint, users_blueprint)
 from database import base
 from database import session
