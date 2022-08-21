@@ -1,18 +1,10 @@
-from hashlib import algorithms_available
-import json
-from lib2to3.pgen2 import token
-import secrets
 from flask import Blueprint
 from src.database.models import User, Colors, mixColors
 from src.database import session
-from flask import Flask, request, jsonify, make_response
+from flask import request, make_response
 from .auth import token_required
-from datetime import datetime, timedelta
-from functools import wraps
-from sqlalchemy import func
-from sqlalchemy.sql import text
+from src.database.models.Color import mixColors
 
-import random
 users_blueprint = Blueprint("users", __name__)
 
 
@@ -24,7 +16,7 @@ def update_user(current_user):
         Colors.person == current_user.public_id).first()
     setattr(current_user, 'name', data["name"])
     setattr(query, 'favorite_color', data["favorite_color"])
-    lucky_color = mixColors(data["favorite_color"],data["hated_color"])
+    lucky_color = mixColors(data["favorite_color"], data["hated_color"])
     setattr(query, 'lucky_color', lucky_color)
     setattr(query, 'hated_color', data["hated_color"])
     session.commit()
@@ -34,7 +26,6 @@ def update_user(current_user):
     for item in user.keys():
         user_return[item] = user[item]
     return user_return, 200
-
 
 
 @users_blueprint.route('/change_random_color', methods=["PUT"])
@@ -47,3 +38,18 @@ def update_lucky_color(current_user):
     session.commit()
     return {}, 200
 
+
+@users_blueprint.route('/color', methods=["POST"])
+@token_required
+def set_color(current_user):
+    data = request.json
+    if not "favorite_color" or "hated color" in data:
+        return make_response("missing data", status=400)
+    luckyC = mixColors(data["favorite_color"], data["hated_color"])
+    query = session.query(Colors).where(
+        Colors.person == current_user.public_id).first()
+    setattr(query, "favorite_color", data["favorite_color"])
+    setattr(query, "hated_color", data["hated_color"])
+    setattr(query, "lucky_color", luckyC)
+    session.commit()
+    return make_response("done", 200)
